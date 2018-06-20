@@ -28,7 +28,6 @@
    "scripts": {
       "start": "SET NODE_ENV=development& nodemon --exec ts-node src/index.ts",
       "gen-schema-types": "gql2ts src/schema.graphql -o src/types/schema.d.ts",
-      "test": "SET NODE_ENV=test& jest --detectOpenHandles",
-      "test-server": "SET NODE_ENV=test& ts-node src/index.ts"
+      "test": "SET NODE_ENV=test& jest --detectOpenHandles --logHeapUsage --logHeapUsage  --runInBand --verbose"
    }
 }
