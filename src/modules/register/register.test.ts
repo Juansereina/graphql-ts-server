@@ -1,7 +1,8 @@
 import { request } from "graphql-request";
 import { getConnectionManager } from "typeorm";
-import { User } from "../entity/User";
-import { startServer } from "./../startServer";
+import { startServer } from "../../startServer";
+import { User } from "../../entity/User";
+
 
 let getHost: string;
 let app: any;
