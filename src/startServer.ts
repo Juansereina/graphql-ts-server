@@ -10,6 +10,8 @@ import { User } from "./entity/User";
 
 const redis = new Redis();
 
+redis.on('error', (error:any) => (error))
+
 export const startServer = async () => {
   const schemas: GraphQLSchema[] = [];
   const folders = fs.readdirSync(path.join(__dirname, "./modules"));

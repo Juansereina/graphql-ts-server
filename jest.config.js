@@ -1,4 +1,5 @@
  module.exports = {
+     "globalSetup": "./src/test/call.setup.js",
      "transform": {
          "^.+\\.tsx?$": "ts-jest"
      },
@@ -10,5 +11,6 @@
          "jsx",
          "json",
          "node"
-     ]
+     ],
+     "setupTestFrameworkScriptFile": './jest.setup.js'
  }
