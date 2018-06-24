@@ -10,6 +10,8 @@ import {
   duplicateEmail
 } from "./errorMessages";
 import { createConfirmEmailLink } from "../../utils/createConfirmEmailLink";
+import { sendEmail } from "../../utils/sendEmail";
+import * as v4 from 'uuid/v4';
 
 const schema = yup.object().shape({
   email: yup
@@ -28,7 +30,11 @@ export const resolvers: ResolverMap = {
     bye: () => "bye"
   },
   Mutation: {
-    register: async (_, args:GQL.IRegisterOnMutationArguments, { redis, url }:any ): Promise<any> => {
+    register: async (
+      _,
+      args: GQL.IRegisterOnMutationArguments,
+      { redis, url }: any
+    ): Promise<any> => {
       try {
         await schema.validate(args, { abortEarly: false });
       } catch (err) {
@@ -50,12 +56,15 @@ export const resolvers: ResolverMap = {
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = await User.create({
+        id: v4(),
         email,
         password: hashedPassword
       });
       await newUser.save();
-
-      await createConfirmEmailLink(url, newUser.id, redis);
+      const link = await createConfirmEmailLink(url, newUser.id, redis);
+      if(process.env.NODE_ENV !== 'tes'){
+        sendEmail(email, link);
+      }      
       return null;
     }
   }
