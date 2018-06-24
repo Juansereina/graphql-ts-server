@@ -11,6 +11,5 @@
          "jsx",
          "json",
          "node"
-     ],
-     "setupTestFrameworkScriptFile": './jest.setup.js'
+     ]
  }

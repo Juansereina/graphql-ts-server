@@ -10,8 +10,6 @@ import { User } from "./entity/User";
 
 const redis = new Redis();
 
-redis.on('error', (error:any) => (error))
-
 export const startServer = async () => {
   const schemas: GraphQLSchema[] = [];
   const folders = fs.readdirSync(path.join(__dirname, "./modules"));
@@ -32,8 +30,13 @@ export const startServer = async () => {
   server.express.get("/confirm/:id", async (req, res) => {
     const { id } = req.params;
     const userId = await redis.get(id);
-    await User.update({ id: userId }, { confirmed: true });
-    res.send("ok");
+    if (userId) { 
+      await User.update({ id: userId }, { confirmed: true }); 
+      await redis.del(id);
+      res.send("ok");
+    }else{
+      res.send('invalid');
+    }
   });
 
   await createTypeormConnection();
