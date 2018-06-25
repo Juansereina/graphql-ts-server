@@ -7,6 +7,7 @@ import {
   duplicateEmail
 } from "./errorMessages";
 import { createTypeormConnection } from "../../utils/createTypeormConnections";
+import { Connection } from "typeorm";
 
 const email = "juan@hotmail.com";
 const password = "123456789";
@@ -21,8 +22,15 @@ mutation{
 }
 `;
 
+
+let conn: Connection;
+
 beforeAll(async () => {
-  await createTypeormConnection();  
+  conn = await createTypeormConnection();
+});
+
+afterAll(async () => {
+  await conn.close();
 });
 
 describe("Register user", () => {
