@@ -1,4 +1,3 @@
-import { request } from "graphql-request";
 import { User } from "../../entity/User";
 import {
   emailNotLongEnough,
@@ -8,20 +7,10 @@ import {
 } from "./errorMessages";
 import { createTypeormConnection } from "../../utils/createTypeormConnections";
 import { Connection } from "typeorm";
+import { TestClient } from "../../utils/testClient";
 
 const email = "juan@hotmail.com";
 const password = "123456789";
-const getHost = process.env.TEST_HOST as string;
-
-const mutation = (mutationEmail: string, mutationPassword: string) => `
-mutation{
-  register(email: "${mutationEmail}", password: "${mutationPassword}"){
-    path
-    message
-  }
-}
-`;
-
 
 let conn: Connection;
 
@@ -35,8 +24,9 @@ afterAll(async () => {
 
 describe("Register user", () => {
   it("Make sure we can register a user", async () => {
-    const response = await request(getHost, mutation(email, password));
-    expect(response).toEqual({ register: null });
+    const client = new TestClient();
+    const response = await client.register(email, password);
+    expect(response.data).toEqual({ register: null });
     const users = await User.find({ where: { email } });
     expect(users).toHaveLength(1);
     const user = users[0];
@@ -44,16 +34,18 @@ describe("Register user", () => {
     expect(user.password).not.toEqual(password);
   });
   it("Test for duplicate emails", async () => {
-    const response: any = await request(getHost, mutation(email, password));
-    expect(response.register).toHaveLength(1);
-    expect(response.register[0]).toEqual({
+    const client = new TestClient();
+    const response = await client.register(email, password);
+    expect(response.data.register).toHaveLength(1);
+    expect(response.data.register[0]).toEqual({
       path: "email",
       message: duplicateEmail
     });
   });
   it("Catch bad email", async () => {
-    const response: any = await request(getHost, mutation("ju", password));
-    expect(response).toEqual({
+    const client = new TestClient();
+    const response = await client.register("ju", password);
+    expect(response.data).toEqual({
       register: [
         {
           path: "email",
@@ -68,8 +60,9 @@ describe("Register user", () => {
   });
 
   it("Catch bad password", async () => {
-    const response = await request(getHost, mutation(email, "ju"));
-    expect(response).toEqual({
+    const client = new TestClient();
+    const response = await client.register(email, "as");
+    expect(response.data).toEqual({
       register: [
         {
           path: "password",
@@ -80,8 +73,9 @@ describe("Register user", () => {
   });
 
   it("Catch bad password and bad email", async () => {
-    const response: any = await request(getHost, mutation("df", "ad"));
-    expect(response).toEqual({
+    const client = new TestClient();
+    const response = await client.register("df", "ad");
+    expect(response.data).toEqual({
       register: [
         {
           path: "email",
