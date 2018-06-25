@@ -4,21 +4,21 @@ import { User } from "../../entity/User";
 import { createTypeormConnection } from "./../../utils/createTypeormConnections";
 import { Connection } from "typeorm";
 
-const email = "tom@bob.com";
-const password = "jalksdf";
+const email = "juan@hot.com";
+const password = "123456";
 
-const registerMutation = (e: string, p: string) => `
+const registerMutation = (emailMutation: string, passwordMutation: string) => `
 mutation {
-  register(email: "${e}", password: "${p}") {
+  register(email: "${emailMutation}", password: "${passwordMutation}") {
     path
     message
   }
 }
 `;
 
-const loginMutation = (e: string, p: string) => `
+const loginMutation = (emailMutation: string, passwordMutation: string) => `
 mutation {
-  login(email: "${e}", password: "${p}") {
+  login(email: "${emailMutation}", password: "${passwordMutation}") {
     path
     message
   }
@@ -35,38 +35,35 @@ afterAll(async () => {
   await conn.close();
 });
 
-const loginExpectError = async (e: string, p: string, errMsg: string) => {
+const loginExpectError = async (emailTemp: string, passwordTemp: string, errorMessage: string) => {
   const response = await request(
     process.env.TEST_HOST as string,
-    loginMutation(e, p)
+    loginMutation(emailTemp, passwordTemp)
   );
 
   expect(response).toEqual({
     login: [
       {
         path: "email",
-        message: errMsg
+        message: errorMessage
       }
     ]
   });
 };
 
-describe("login", () => {
-  test("email not found send back error", async () => {
-    await loginExpectError("bob@bob.com", "whatever", invalidLogin);
+describe("Login Tests", () => {
+  it("Email not found send back error", async () => {
+    await loginExpectError("jua@hot.com", "what__", invalidLogin);
   });
 
-  test("email not confirmed", async () => {
+  it("Email not confirmed", async () => {
     await request(
       process.env.TEST_HOST as string,
       registerMutation(email, password)
     );
-
     await loginExpectError(email, password, confirmEmailError);
-
     await User.update({ email }, { confirmed: true });
-
-    await loginExpectError(email, "aslkdfjaksdljf", invalidLogin);
+    await loginExpectError(email, "0123456", invalidLogin);
 
     const response = await request(
       process.env.TEST_HOST as string,

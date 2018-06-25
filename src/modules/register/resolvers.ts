@@ -31,7 +31,7 @@ export const resolvers: ResolverMap = {
   Mutation: {
     register: async (
       _,
-      args: GQL.IRegisterOnMutationArguments,
+      args: GQL.IRegisterOnMutationArguments
       // { redis, url }: any
     ): Promise<any> => {
       try {
@@ -53,16 +53,15 @@ export const resolvers: ResolverMap = {
         ];
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = await User.create({
+      const newUser = User.create({
         email,
-        password: hashedPassword
+        password
       });
       await newUser.save();
       // await createConfirmEmailLink(url, newUser.id, redis);
       // if(process.env.NODE_ENV !== 'test'){
       //   sendEmail(email, link);
-      // }      
+      // }
       return null;
     }
   }
