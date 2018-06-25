@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createTypeormConnection } from './../../utils/createTypeormConnections';
+import { createTypeormConnection } from "./../../utils/createTypeormConnections";
 import { User } from "../../entity/User";
 import { Connection } from "typeorm";
 
@@ -41,6 +41,12 @@ const meQuery = `
 `;
 
 describe("Me test", () => {
+  it("Return null if no cookie", async () => {
+    const response = await axios.post(process.env.TEST_HOST as string, {
+      query: meQuery
+    });
+    expect(response.data.data.me).toBeNull();
+  });
   it("Get current user", async () => {
     await axios.post(
       process.env.TEST_HOST as string,
@@ -51,7 +57,6 @@ describe("Me test", () => {
         withCredentials: true
       }
     );
-
     const response = await axios.post(
       process.env.TEST_HOST as string,
       {
@@ -61,7 +66,6 @@ describe("Me test", () => {
         withCredentials: true
       }
     );
-
     expect(response.data.data).toEqual({
       me: {
         id: userId,
