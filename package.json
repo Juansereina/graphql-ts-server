@@ -48,6 +48,6 @@
     "scripts": {
         "start": "SET NODE_ENV=development& nodemon --exec ts-node src/index.ts",
         "gen-schema-types": "ts-node src/scripts/createTypes.ts",
-        "test": "SET NODE_ENV=test& jest --detectOpenHandles --runInBand --forceExit"
+        "test": "SET NODE_ENV=test& jest --detectOpenHandles --runInBand --watchAll"
     }
 }
