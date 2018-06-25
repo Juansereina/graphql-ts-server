@@ -23,11 +23,19 @@ afterAll(async () => {
 });
 
 describe("logout", () => {
-  it("test logging out a user", async () => {
+  it("Logout multiple sessions", async () => {
+    const sess1 = new TestClient();
+    const sess2 = new TestClient();
+    await sess1.login(email, password);
+    await sess2.login(email, password);
+    expect(await sess1.me()).toEqual(await sess2.me());
+    await sess1.logout();
+    expect(await sess1.me()).toEqual(await sess2.me());
+  });
+
+it("Logout single session", async () => {
     const client = new TestClient();
-
     await client.login(email, password);
-
     const response = await client.me();
     expect(response.data).toEqual({
       me: {
@@ -35,11 +43,8 @@ describe("logout", () => {
         email
       }
     });
-
     await client.logout();
-
     const response2 = await client.me();
-
     expect(response2.data.me).toBeNull();
   });
 });
