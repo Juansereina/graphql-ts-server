@@ -4,6 +4,10 @@ import { TestClient } from "../../utils/TestClient";
 import * as Redis from "ioredis";
 import { createTypeormConnection } from "../../utils/createTypeormConnections";
 import { createForgotPasswordLink } from "../../utils/createForgotPasswordLink";
+import { forgotPasswordLockAccount } from "../../utils/forgotPasswordLockAccount";
+import { forgotPasswordLockedError } from "../login/errorMessages";
+import { passwordNotLongEnough } from "../register/errorMessages";
+import { expiredKeyError } from "./errorMessages";
 
 let conn: Connection;
 export const redis = new Redis();
@@ -26,17 +30,53 @@ afterAll(async () => {
   conn.close();
 });
 
-describe("Forgot password Test", () => {
+describe("Forgot password", () => {
   it("Make sure it works", async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
+    const client = new TestClient();
 
+    await forgotPasswordLockAccount(userId, redis);
     const url = await createForgotPasswordLink("", userId, redis);
+
     const parts = url.split("/");
     const key = parts[parts.length - 1];
 
+    expect(await client.login(email, password)).toEqual({
+      data: {
+        login: [
+          {
+            path: "email",
+            message: forgotPasswordLockedError
+          }
+        ]
+      }
+    });
+
+    expect(await client.forgotPasswordChange("j", key)).toEqual({
+      data: {
+        forgotPasswordChange: [
+          {
+            path: "newPassword",
+            message: passwordNotLongEnough
+          }
+        ]
+      }
+    });
+
     const response = await client.forgotPasswordChange(newPassword, key);
+
     expect(response.data).toEqual({
       forgotPasswordChange: null
+    });
+
+    expect(await client.forgotPasswordChange("abcdefg", key)).toEqual({
+      data: {
+        forgotPasswordChange: [
+          {
+            path: "key",
+            message: expiredKeyError
+          }
+        ]
+      }
     });
 
     expect(await client.login(email, newPassword)).toEqual({

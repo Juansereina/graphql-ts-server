@@ -1,4 +1,5 @@
 import { ResolverMap } from "../../types/graphql-utils";
+import { removeAllUsersSessions } from "../../utils/removeAllUsersSessions";
 
 export const resolvers: ResolverMap = {
   Query: {
@@ -8,7 +9,7 @@ export const resolvers: ResolverMap = {
     logout: async (_, __, { session, redis }) => {
       const { userId } = session;
       if (userId) {
-        return true;
+        removeAllUsersSessions(userId, redis);
       }
       return false;
     }
