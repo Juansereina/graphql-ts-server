@@ -17,7 +17,7 @@ export const startServer = async () => {
     await redis.flushall();
   }
   const server = new GraphQLServer({
-    schema: genSchema(),
+    schema: genSchema() as any,
     context: ({ request }) => ({
       redis,
       url: request.protocol + "://" + request.get("host"),

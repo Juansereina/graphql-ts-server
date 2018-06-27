@@ -30,7 +30,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  conn.close();
+  await conn.close();
 });
 
 describe("Forgot password", () => {
@@ -71,7 +71,9 @@ describe("Forgot password", () => {
       forgotPasswordChange: null
     });
 
-    expect(await client.forgotPasswordChange(faker.internet.password(), key)).toEqual({
+    expect(
+      await client.forgotPasswordChange(faker.internet.password(), key)
+    ).toEqual({
       data: {
         forgotPasswordChange: [
           {

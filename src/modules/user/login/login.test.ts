@@ -3,8 +3,8 @@ import * as faker from "faker";
 
 import { invalidLogin, confirmEmailError } from "./errorMessages";
 import { User } from "../../../entity/User";
-import { createTypeormConnection } from ".././../../utils/createTypeormConnections";
 import { TestClient } from "../../../utils/testClient";
+import { createTestConn } from "../../../test/createTestConnection";
 
 faker.seed(Date.now() + 1);
 const email = faker.internet.email();
@@ -14,7 +14,7 @@ const client = new TestClient();
 let conn: Connection;
 
 beforeAll(async () => {
-  conn = await createTypeormConnection();
+  conn = await createTestConn();
 });
 
 afterAll(async () => {
