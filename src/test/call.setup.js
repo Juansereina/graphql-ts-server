@@ -4,8 +4,8 @@ const {
 } = require('./setup');
 
 module.exports = async function () {
-   // if (process.env.TEST_HOST) {
+    if (!process.env.TEST_HOST) {
         await setup();
-   // }
+    }
     return null;
 }
