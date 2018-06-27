@@ -10,7 +10,7 @@ import { redisSessionPrefix } from "./constants";
 import { createTestConn } from "./test/createTestConnection";
 
 const SESSION_SECRET = "ajslkjalksjdfkl";
-const RedisStore = connectRedis(session);
+const RedisStore = connectRedis(session as any);
 
 export const startServer = async () => {
   if (process.env.NODE_ENV === "test") {
@@ -41,7 +41,7 @@ export const startServer = async () => {
         secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 7
       }
-    })
+    } as any)
   );
 
   const cors = {

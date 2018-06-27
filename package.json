@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "description": "Awesome project developed with TypeORM.",
     "devDependencies": {
+        "@gql2ts/types": "^1.8.0",
         "@types/bcryptjs": "^2.4.1",
         "@types/connect-redis": "^0.0.7",
         "@types/dotenv": "^4.0.3",
@@ -17,6 +18,7 @@
         "@types/request-promise": "^4.1.41",
         "@types/sparkpost": "^2.1.4",
         "@types/uuid": "^3.4.3",
+        "@types/ws": "^5.1.2",
         "@types/yup": "^0.24.7",
         "gql2ts": "^1.8.0",
         "jest": "^23.1.0",
