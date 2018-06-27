@@ -5,6 +5,7 @@ import { Connection } from "typeorm";
 import { TestClient } from "../../../utils/testClient";
 import { createTestConn } from "../../../test/createTestConnection";
 
+faker.seed(Date.now() + 2);
 let conn: Connection;
 const email = faker.internet.email();
 const password = faker.internet.password();

@@ -6,6 +6,7 @@ import { User } from "../../../entity/User";
 import { createTypeormConnection } from ".././../../utils/createTypeormConnections";
 import { TestClient } from "../../../utils/testClient";
 
+faker.seed(Date.now() + 1);
 const email = faker.internet.email();
 const password = faker.internet.password();
 const client = new TestClient();
