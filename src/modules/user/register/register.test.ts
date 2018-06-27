@@ -1,15 +1,15 @@
 import { Connection } from "typeorm";
 import * as faker from "faker";
 
-import { User } from "../../entity/User";
+import { User } from "../../../entity/User";
 import {
   emailNotLongEnough,
   invalidEmail,
   passwordNotLongEnough,
   duplicateEmail
 } from "./errorMessages";
-import { TestClient } from "../../utils/testClient";
-import { createTestConn } from "../../test/createTestConnection";
+import { TestClient } from "../../../utils/testClient";
+import { createTestConn } from "../../../test/createTestConnection";
 
 const email = faker.internet.email();
 const password = faker.internet.password();

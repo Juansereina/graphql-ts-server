@@ -4,8 +4,8 @@ import { Connection } from "typeorm";
 import * as faker from "faker";
 
 import { createConfirmEmailLink } from "./createConfirmEmailLink";
-import { User } from "../../entity/User";
-import { createTestConn } from "../../test/createTestConnection";
+import { User } from "../../../entity/User";
+import { createTestConn } from "../../../test/createTestConnection";
 
 let userId = "";
 const redis = new Redis();

@@ -1,8 +1,9 @@
 import * as faker from "faker";
-import { User } from "../../entity/User";
+
+import { User } from "../../../entity/User";
 import { Connection } from "typeorm";
-import { TestClient } from "../../utils/testClient";
-import { createTestConn } from "../../test/createTestConnection";
+import { TestClient } from "../../../utils/testClient";
+import { createTestConn } from "../../../test/createTestConnection";
 
 let conn: Connection;
 const email = faker.internet.email();

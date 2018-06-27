@@ -1,9 +1,9 @@
 import { Connection } from "typeorm";
 import * as faker from "faker";
 
-import { User } from "../../entity/User";
-import { TestClient } from "../../utils/testClient";
-import { createTestConn } from "../../test/createTestConnection";
+import { User } from "../../../entity/User";
+import { TestClient } from "../../../utils/testClient";
+import { createTestConn } from "../../../test/createTestConnection";
 
 let userId: string;
 let conn: Connection;
@@ -21,7 +21,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
- await conn.close();
+  await conn.close();
 });
 
 describe("Me test", () => {

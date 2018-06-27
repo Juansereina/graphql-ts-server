@@ -1,9 +1,13 @@
 import * as bcrypt from "bcryptjs";
 
-import { ResolverMap } from "../../types/graphql-utils";
-import { User } from "../../entity/User";
-import { invalidLogin, confirmEmailError, forgotPasswordLockedError } from "./errorMessages";
-import { userSessionIdPrefix } from "../../constants";
+import { ResolverMap } from "../../../types/graphql-utils";
+import { User } from "../../../entity/User";
+import {
+  invalidLogin,
+  confirmEmailError,
+  forgotPasswordLockedError
+} from "./errorMessages";
+import { userSessionIdPrefix } from "../../../constants";
 const errorResponse = [
   {
     path: "email",
@@ -12,9 +16,6 @@ const errorResponse = [
 ];
 
 export const resolvers: ResolverMap = {
-  Query: {
-    bye2: () => "bye"
-  },
   Mutation: {
     login: async (
       _,

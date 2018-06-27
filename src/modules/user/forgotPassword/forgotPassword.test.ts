@@ -2,14 +2,14 @@ import * as Redis from "ioredis";
 import { Connection } from "typeorm";
 import * as faker from "faker";
 
-import { User } from "../../entity/User";
-import { TestClient } from "../../utils/TestClient";
-import { createForgotPasswordLink } from "../../utils/createForgotPasswordLink";
-import { forgotPasswordLockAccount } from "../../utils/forgotPasswordLockAccount";
+import { User } from "../../../entity/User";
+import { TestClient } from "../../../utils/TestClient";
+import { createForgotPasswordLink } from "../../../utils/createForgotPasswordLink";
+import { forgotPasswordLockAccount } from "../../../utils/forgotPasswordLockAccount";
 import { forgotPasswordLockedError } from "../login/errorMessages";
 import { passwordNotLongEnough } from "../register/errorMessages";
 import { expiredKeyError } from "./errorMessages";
-import { createTestConn } from "../../test/createTestConnection";
+import { createTestConn } from "../../../test/createTestConnection";
 
 let conn: Connection;
 const redis = new Redis();
