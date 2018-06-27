@@ -1,23 +1,25 @@
-import { User } from "../../entity/User";
-import { Connection } from "typeorm";
-import { TestClient } from "../../utils/TestClient";
 import * as Redis from "ioredis";
-import { createTypeormConnection } from "../../utils/createTypeormConnections";
+import { Connection } from "typeorm";
+import * as faker from "faker";
+
+import { User } from "../../entity/User";
+import { TestClient } from "../../utils/TestClient";
 import { createForgotPasswordLink } from "../../utils/createForgotPasswordLink";
 import { forgotPasswordLockAccount } from "../../utils/forgotPasswordLockAccount";
 import { forgotPasswordLockedError } from "../login/errorMessages";
 import { passwordNotLongEnough } from "../register/errorMessages";
 import { expiredKeyError } from "./errorMessages";
+import { createTestConn } from "../../test/createTestConnection";
 
 let conn: Connection;
-export const redis = new Redis();
-const email = "juanse@hot.com";
-const password = "0123456";
-const newPassword = "nuevo12346";
+const redis = new Redis();
+const email = faker.internet.email();
+const password = faker.internet.password();
+const newPassword = faker.internet.password();
 
 let userId: string;
 beforeAll(async () => {
-  conn = await createTypeormConnection();
+  conn = await createTestConn();
   const user = await User.create({
     email,
     password,
@@ -68,7 +70,7 @@ describe("Forgot password", () => {
       forgotPasswordChange: null
     });
 
-    expect(await client.forgotPasswordChange("abcdefg", key)).toEqual({
+    expect(await client.forgotPasswordChange(faker.internet.password(), key)).toEqual({
       data: {
         forgotPasswordChange: [
           {

@@ -1,3 +1,6 @@
+import { Connection } from "typeorm";
+import * as faker from "faker";
+
 import { User } from "../../entity/User";
 import {
   emailNotLongEnough,
@@ -5,17 +8,16 @@ import {
   passwordNotLongEnough,
   duplicateEmail
 } from "./errorMessages";
-import { createTypeormConnection } from "../../utils/createTypeormConnections";
-import { Connection } from "typeorm";
 import { TestClient } from "../../utils/testClient";
+import { createTestConn } from "../../test/createTestConnection";
 
-const email = "juan@hotmail.com";
-const password = "123456789";
-
+const email = faker.internet.email();
+const password = faker.internet.password();
+const client = new TestClient();
 let conn: Connection;
 
 beforeAll(async () => {
-  conn = await createTypeormConnection();
+  conn = await createTestConn();
 });
 
 afterAll(async () => {
@@ -24,7 +26,6 @@ afterAll(async () => {
 
 describe("Register user", () => {
   it("Make sure we can register a user", async () => {
-    const client = new TestClient();
     const response = await client.register(email, password);
     expect(response.data).toEqual({ register: null });
     const users = await User.find({ where: { email } });
@@ -34,7 +35,6 @@ describe("Register user", () => {
     expect(user.password).not.toEqual(password);
   });
   it("Test for duplicate emails", async () => {
-    const client = new TestClient();
     const response = await client.register(email, password);
     expect(response.data.register).toHaveLength(1);
     expect(response.data.register[0]).toEqual({
@@ -43,7 +43,6 @@ describe("Register user", () => {
     });
   });
   it("Catch bad email", async () => {
-    const client = new TestClient();
     const response = await client.register("ju", password);
     expect(response.data).toEqual({
       register: [
@@ -60,8 +59,7 @@ describe("Register user", () => {
   });
 
   it("Catch bad password", async () => {
-    const client = new TestClient();
-    const response = await client.register(email, "as");
+    const response = await client.register(faker.internet.email(), "as");
     expect(response.data).toEqual({
       register: [
         {
@@ -73,7 +71,6 @@ describe("Register user", () => {
   });
 
   it("Catch bad password and bad email", async () => {
-    const client = new TestClient();
     const response = await client.register("df", "ad");
     expect(response.data).toEqual({
       register: [
